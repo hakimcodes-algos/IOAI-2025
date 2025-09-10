@@ -7,14 +7,12 @@ import zipfile
 import os
 
 if __name__ == '__main__':
-    with zipfile.ZipFile('submission.zip', 'r') as zip_ref:
-        zip_ref.extractall('submission/')
-    if os.environ.get('ANSWER_PATH'):
-        ANSWER_PATH = os.environ.get("ANSWER_PATH") + "/" 
-    else:
-        ANSWER_PATH = ""  # Fallback for local testing
+    with zipfile.ZipFile('./Scoring/submission.zip', 'r') as zip_ref:
+        zip_ref.extractall('./Scoring/submission/')
+
+    ANSWER_PATH = "./Scoring/"  # local testing
     # A榜
-    predA_dir = "submission/submissionA.csv"
+    predA_dir = ANSWER_PATH + "submission/submissionA.csv"
     test_dir = ANSWER_PATH + "label.csv"
     y_predA = pd.read_csv(predA_dir, header=None)
     y_test = pd.read_csv(test_dir)
@@ -23,7 +21,7 @@ if __name__ == '__main__':
         accuracy_A = 0
     print(f"Accuracy for test A: {accuracy_A:.2f}")
     # B榜
-    predB_dir = "submission/submissionB.csv"
+    predB_dir = ANSWER_PATH + "submission/submissionB.csv"
     y_predB = pd.read_csv(predB_dir, header=None)
     accuracy_B = accuracy_score(y_predB, y_test['testing_label'])
     if accuracy_B > 1:
