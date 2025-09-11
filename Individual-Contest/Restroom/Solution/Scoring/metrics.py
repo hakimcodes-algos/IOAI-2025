@@ -2,6 +2,7 @@ import numpy as np
 import json
 import os
 import sys
+from pathlib import Path
 
 def calculate_precision_at_1(predictions, ground_truth):
     """
@@ -124,16 +125,14 @@ def main():
     Main evaluation function.
     """
     print("Starting evaluation...")
-    if os.environ.get('METRIC_PATH'):
-        METRIC_PATH = os.environ.get("METRIC_PATH") + "/" 
-    else:
-        METRIC_PATH = ""  # Fallback for local testing
-    # File paths
-    submission_a_file = "submission_a.npy"
-    submission_b_file = "submission_b.npy"
-    ground_truth_a_file = METRIC_PATH + "answer_a.npy"
-    ground_truth_b_file = METRIC_PATH + "answer_b.npy"
-    output_file = "score.json"
+    BASE_PATH = Path(__file__).parent
+    SCORING_PATH = BASE_PATH
+
+    submission_a_file = SCORING_PATH / "submission_a.npy"
+    submission_b_file = SCORING_PATH / "submission_b.npy"
+    ground_truth_a_file = SCORING_PATH / "answer_a.npy"
+    ground_truth_b_file = SCORING_PATH / "answer_b.npy"
+    output_file = SCORING_PATH / "score.json"
     
     # Evaluate test set A
     score_a = evaluate_test_set(submission_a_file, ground_truth_a_file, "Test Set A")
