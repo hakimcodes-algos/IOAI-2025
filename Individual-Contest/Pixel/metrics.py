@@ -13,15 +13,12 @@ from tqdm.auto import tqdm  # Progress bar
 import random
 import matplotlib.pyplot as plt
 
-if os.environ.get('METRIC_PATH'):
-    METRIC_PATH = os.environ.get("METRIC_PATH") + "/" 
-else:
-    METRIC_PATH = ""  # Fallback for local testing
+
 H, W = 224, 224
-MODEL_PATH = "/bohr/clip-vit-large-patch14-aft9/v1/clip-vit-large-patch14"
-DATASET_PATH = METRIC_PATH + "reference_dataset"
-MASK_PATH = "masks.jsonl"
-SPLIT = "test"
+MODEL_PATH = "openai/clip-vit-large-patch14"
+DATASET_PATH = "noctuashap/IOAI-2025-Pixel-ref"
+MASK_PATH = "submission.jsonl"
+SPLIT = "ref"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 RETAIN_RATIO = 0.0625
 SCORE_OUTPUT_FILE = "score.json"
@@ -261,10 +258,8 @@ def apply_mask_with_mean(image, mask, mean_rgb=MEAN_COLOR):
 
 if __name__ == '__main__':
     try:
-        # Load the animals dataset using the function from animal_dataset.py
         try:
-            dataset = load_from_disk(DATASET_PATH)
-            dataset = dataset[SPLIT]
+            dataset = load_dataset(DATASET_PATH, split=SPLIT)
         except Exception:
             write_error_score("Unable to load reference dataset.")
             exit(1)
