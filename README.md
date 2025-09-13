@@ -26,16 +26,57 @@ The [**2nd International Olympiad in Artificial Intelligence (IOAI 2025)**](http
 | [Task 5](Individual-Contest/Antique) | [Antique Painting Authentication](Individual-Contest/Antique/Antique.ipynb) | [Training Set](Individual-Contest/Antique/training_set) | [Solution](Individual-Contest/Antique/Solution/Antique_Solution.ipynb) | [Validation Set](Individual-Contest/Antique/Solution/validation_set) | [Test Set](Individual-Contest/Antique/Solution/test_set) |
 | [Task 6](Individual-Contest/Pixel) | [Pixel Efficiency](Individual-Contest/Pixel/Pixel.ipynb) | [Training Set](Individual-Contest/Pixel/training_set) | [Solution](Individual-Contest/Pixel/Solution/Pixel_Solution.ipynb) | - | [Test Set](Individual-Contest/Pixel/Solution/test_set) |
 
-## Downloading Large Data Files
 
-Large datasets and model files have been removed from GitHub due to size limits, but are hosted on [Hugging Face Datasets](https://huggingface.co/datasets/IOAI-official/IOAI2025).
+## Environment Setup
 
-After cloning this repository, run:
+The competition environment uses Python 3.12.7 and includes a comprehensive set of dependencies listed in [requirements.txt](requirements.txt). Below are instructions for setting up the environment using different package managers.
+
+### Using Conda (Recommended)
 
 ```bash
-pip install huggingface_hub
-python utils/DownloadLargeData.py
+# Create and activate a new conda environment
+conda create -n ioai-2025 python=3.12.7
+conda activate ioai-2025
+
+# Update pip and install dependencies
+pip install --upgrade pip
+pip install --no-deps -r requirements.txt
 ```
+
+### Using venv
+
+```bash
+# Linux/macOS
+python3.12 -m venv ioai-2025
+source ioai-2025/bin/activate
+
+# Windows
+python -m venv ioai-2025
+.\ioai-2025\Scripts\activate
+
+# Install dependencies (all platforms)
+pip install --upgrade pip
+pip install --no-deps -r requirements.txt
+```
+
+### Using pyenv
+
+```bash
+# Install Python 3.12.7
+pyenv install 3.12.7
+pyenv local 3.12.7
+
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+.\.venv\Scripts\activate   # Windows
+
+# Install dependencies
+pip install --upgrade pip
+pip install --no-deps -r requirements.txt
+```
+
+> **Note**: The `--no-deps` flag is required to ensure exact package versions match the competition environment.
 
 ## Translations of Individual Contest Tasks
 
