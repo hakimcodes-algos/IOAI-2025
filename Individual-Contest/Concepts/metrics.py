@@ -1,26 +1,29 @@
-import os
-import pickle
 import json
 import math
 import httpx
 from httpx import AsyncClient
-from datasets import load_from_disk
+from datasets import load_dataset
 from tqdm import tqdm
 import json
-from asyncio import Semaphore
 import asyncio
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+import pathlib
 
-if os.environ.get('DATA_PATH'):
-    TEST_PATH = os.environ.get("DATA_PATH") + "/test/" 
-else:
-    TEST_PATH = ""
+VALID_PATH = "IOAI-official/ioai2025-onsite-concepts-validation"
+TEST_PATH = "IOAI-official/ioai2025-onsite-concepts-test"
+
+
+current_dir = pathlib.Path(__file__).parent
+
+CLUES_A_PATH = str(current_dir / "out" / "clues_a.jsonl")
+CLUES_B_PATH = str(current_dir / "out" / "clues_b.jsonl")
+OUTPUT_JSON = str(current_dir / "out" / "score.json")
+
 
 TEST_A_LEN = 50
 TEST_B_LEN = 100
-API_URL = ""
-API_KEY = "" # God API key for evaluation
-# Please import your LLM API, such as from open router
+API_URL = "https://concepts-judge-server-eval-27115.up.railway.app"
+API_KEY = "sk-or-v1-openrouter-api-key" # Please provide your own OpenRouter API key to run this script
 
 a_client = AsyncClient()
 
@@ -136,11 +139,11 @@ async def evaluate(clues, testset, test_len, test_name):
     return scores
 
 async def main():
-    testset_a = load_from_disk(os.path.join(TEST_PATH, "test_a"))["test"]
-    testset_b = load_from_disk(os.path.join(TEST_PATH, "test_b"))["test"]
+    testset_a = load_dataset(VALID_PATH)["test"]
+    testset_b = load_dataset(TEST_PATH)["test"]
     try:
-        clues_a = read_clues("clues_a.jsonl")
-        clues_b = read_clues("clues_b.jsonl")
+        clues_a = read_clues(CLUES_A_PATH)
+        clues_b = read_clues(CLUES_B_PATH)
         if not isinstance(clues_a, list):
             raise TypeError(f"`clues_a` must be a list, but got {type(clues_a)}")
         if not isinstance(clues_b, list):
@@ -157,12 +160,9 @@ async def main():
         print(f"Average score for clues_b: {score_b}")
         import math
 
-        # 假设 score_a 和 score_b 已经定义
-        # 检查并处理 score_a
         if math.isnan(score_a) or math.isinf(score_a):
             score_a = 0
 
-        # 检查并处理 score_b
         if math.isnan(score_b) or math.isinf(score_b):
             score_b = 0
 
@@ -174,7 +174,7 @@ async def main():
             },
             "message": "Success!"
         }
-        with open("score.json", "w") as f:
+        with open(OUTPUT_JSON, "w") as f:
             json.dump(ret_json, f)
         
     except Exception as e:
@@ -187,7 +187,7 @@ async def main():
             },
             "message": str(e)
         }
-        with open("score.json", "w") as f:
+        with open(OUTPUT_JSON, "w") as f:
             json.dump(ret_json, f)
     
 if __name__ == "__main__":
