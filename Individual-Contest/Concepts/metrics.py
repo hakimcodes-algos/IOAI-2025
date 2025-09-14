@@ -1,12 +1,13 @@
 import json
 import math
-import httpx
-from httpx import AsyncClient
+# import httpx
+# from httpx import AsyncClient
+from judge_api import guess
 from datasets import load_dataset
 from tqdm import tqdm
 import json
 import asyncio
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+# from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import pathlib
 
 VALID_PATH = "IOAI-official/ioai2025-onsite-concepts-validation"
@@ -22,10 +23,11 @@ OUTPUT_JSON = str(current_dir / "out" / "score.json")
 
 TEST_A_LEN = 50
 TEST_B_LEN = 100
-API_URL = "https://concepts-judge-server-eval-27115.up.railway.app"
-API_KEY = "sk-or-v1-openrouter-api-key" # Please provide your own OpenRouter API key to run this script
 
-a_client = AsyncClient()
+# API_URL = "https://concepts-judge-server-eval-27115.up.railway.app"
+# API_KEY = "sk-ioai-god-key"
+
+# a_client = AsyncClient()
 
 class APIError(Exception):
     pass
@@ -46,23 +48,28 @@ def ndcg_at_10(predictions, correct_answer):
         return 0.0
     return 1 / math.log2(rank + 1)
 
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=4, max=10),
-    retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.TimeoutException, httpx.ConnectError, httpx.RequestError, ValueError))
-)
-async def get_predictions(clues, options):
-    guesser_response = await a_client.post(f"{API_URL}/guess", json={
-        "clues": clues,
-        "options": options
-        }, headers={
-            "Authorization": f"Bearer {API_KEY}"
-        }, timeout=60)
-    guesser_response = guesser_response.json()
-    if "guesses" not in guesser_response:
-        raise ValueError(f"Unable to generate guesses: {guesser_response}")
-    if not isinstance(guesser_response["guesses"], list):
-        raise ValueError(f"Guesses is not a list: {guesser_response}")
+# @retry(
+#     stop=stop_after_attempt(3),
+#     wait=wait_exponential(multiplier=1, min=4, max=10),
+#     retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.TimeoutException, httpx.ConnectError, httpx.RequestError, ValueError))
+# )
+# async def get_predictions(clues, options):
+#     guesser_response = await a_client.post(f"{API_URL}/guess", json={
+#         "clues": clues,
+#         "options": options
+#         }, headers={
+#             "Authorization": f"Bearer {API_KEY}"
+#         }, timeout=60)
+#     guesser_response = guesser_response.json()
+#     if "guesses" not in guesser_response:
+#         raise ValueError(f"Unable to generate guesses: {guesser_response}")
+#     if not isinstance(guesser_response["guesses"], list):
+#         raise ValueError(f"Guesses is not a list: {guesser_response}")
+#     predictions = [p.lower() for p in guesser_response["guesses"]]
+#     return predictions
+
+def get_predictions(clues, options):
+    guesser_response = guess(clues, options)
     predictions = [p.lower() for p in guesser_response["guesses"]]
     return predictions
 
@@ -90,35 +97,36 @@ async def evaluate(clues, testset, test_len, test_name):
     async def process_single_item(i):
         async with semaphore:
             try:
-                predictions = await get_predictions(clues[i], testset[i]['options'])
+                # predictions = await get_predictions(clues[i], testset[i]['options'])
+                predictions = get_predictions(clues[i], testset[i]['options'])
                 hit10 = hits_at_10(predictions, testset[i]['label'])
                 ndcg10 = ndcg_at_10(predictions, testset[i]['label'])
                 score = 0.9 * hit10 + 0.1 * ndcg10
                 return score
 
             except Exception as e:
-                if isinstance(e, httpx.HTTPStatusError):
-                    print(f"HTTP Error  {e.response.status_code}: {e.response.text}")
-                    try:
-                        error_detail = e.response.json().get("detail", "Unknown error")
-                        print(f"Error details: {error_detail}")
-                    except:
-                        print(f"Could not parse error response {e.response.text}")
+            #     if isinstance(e, httpx.HTTPStatusError):
+            #         print(f"HTTP Error  {e.response.status_code}: {e.response.text}")
+            #         try:
+            #             error_detail = e.response.json().get("detail", "Unknown error")
+            #             print(f"Error details: {error_detail}")
+            #         except:
+            #             print(f"Could not parse error response {e.response.text}")
                 
-                elif isinstance(e, ValueError):
-                    print(f"Value error: {e}")
+            #     elif isinstance(e, ValueError):
+            #         print(f"Value error: {e}")
 
-                elif isinstance(e, httpx.TimeoutException):
-                    print("request timed out")
+            #     elif isinstance(e, httpx.TimeoutException):
+            #         print("request timed out")
 
-                elif isinstance(e, httpx.ConnectError):
-                    print(f"Could not connect to {API_URL}")
+            #     elif isinstance(e, httpx.ConnectError):
+            #         print(f"Could not connect to {API_URL}")
 
-                elif isinstance(e, httpx.RequestError):
-                    print(f"Request error: {e}")
+            #     elif isinstance(e, httpx.RequestError):
+            #         print(f"Request error: {e}")
 
-                else:
-                    print(f"Unknown error: {e}")
+            #     else:
+            #         print(f"Unknown error: {e}")
                 raise APIError(f"Error getting predictions for {test_name}[{i}]", e)
     
     # Create tasks for all items
