@@ -246,11 +246,11 @@ if __name__ == '__main__':
                     logging = logging_level('info')
                     
                     # Test both predictions with error handling
-                    score_a, error_a = safe_test(pred_a, 'test', (1, 180, 320))
+                    score_a, error_a = safe_test(pred_a, 'validation', (1, 180, 320))
                     if error_a:
                         ret_json = create_error_response(f"Error in test A evaluation: {error_a}")
                     else:
-                        score_b, error_b = safe_test(pred_b, 'validation', (1, 180, 320))
+                        score_b, error_b = safe_test(pred_b, 'test', (1, 180, 320))
                         if error_b:
                             ret_json = create_error_response(f"Error in test B evaluation: {error_b}")
                         else:
