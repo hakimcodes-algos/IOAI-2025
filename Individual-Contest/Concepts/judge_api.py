@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field
 # ---------------------------------------------------------------------------
 # Configuration - UPDATE THESE VALUES
 # ---------------------------------------------------------------------------
-API_KEY = "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"  # Put your OpenRouter API key here
+API_KEY = "sk-or-v1-put-your-openrouter-api-key-here"  # Put your OpenRouter API key here
 BASE_URL = "https://openrouter.ai/api/v1"
 MODEL = "google/gemini-2.5-flash-lite-preview-06-17"
 
@@ -41,7 +41,6 @@ _ORDINALS = ["first", "second", "third", "fourth"]
 
 
 class GuessResponse(BaseModel):
-    reason: str = Field(description="Reasoning for the guesses")
     answer: List[str] = Field(description="List of guessed keywords")
 
 def guess(clues: List[List[int]], options: Optional[List[str]] = None, N: int = 10) -> List[str]:
@@ -72,7 +71,7 @@ def guess(clues: List[List[int]], options: Optional[List[str]] = None, N: int = 
 {'The secret keyword is guaranteed among the following options:' if options else ''}
 {option_str}
 
-Now, provide {N} guesses of the secret keyword. Explain your reasoning process and provide exactly {N} guesses."""
+Now, provide exactly {N} guesses of the secret keyword."""
 
     # Make API call
     response = _client.beta.chat.completions.parse(

@@ -155,9 +155,9 @@ async def main():
         if not isinstance(clues_b, list):
             raise TypeError(f"`clues_b` must be a list, but got {type(clues_b)}")
         if len(clues_a) != TEST_A_LEN:
-            raise ValueError(f"{"Too many" if len(clues_a) > TEST_A_LEN else "Too few"} clues in `clues_a`. Expected {TEST_A_LEN} clues.")
+            raise ValueError(f"{'Too many' if len(clues_a) > TEST_A_LEN else 'Too few'} clues in `clues_a`. Expected {TEST_A_LEN} clues.")
         if len(clues_b) != TEST_B_LEN:
-            raise ValueError(f"{"Too many" if len(clues_b) > TEST_B_LEN else "Too few"} clues in `clues_b`. Expected {TEST_B_LEN} clues.")
+            raise ValueError(f"{'Too many' if len(clues_b) > TEST_B_LEN else 'Too few'} clues in `clues_b`. Expected {TEST_B_LEN} clues.")
         scores_a = await evaluate(clues_a, testset_a, TEST_A_LEN, "clues_a")
         scores_b = await evaluate(clues_b, testset_b, TEST_B_LEN, "clues_b")
         score_a = sum(scores_a) / len(scores_a)

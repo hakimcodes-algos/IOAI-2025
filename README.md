@@ -29,7 +29,7 @@ The [**2nd International Olympiad in Artificial Intelligence (IOAI 2025)**](http
 
 ## Environment Setup
 
-The competition environment uses Python 3.12.7 and includes a comprehensive set of dependencies listed in [requirements.txt](requirements.txt). Below are instructions for setting up the environment using different package managers.
+The competition environment uses Python 3.12.7 and includes a comprehensive set of dependencies listed in [requirements.txt](requirements.txt). The contestants were not allowed to install other external libraries, so these were the only packages they could use. Below are instructions for setting up the environment using different package managers.
 
 ### Using Conda (Recommended)
 
