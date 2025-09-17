@@ -1,0 +1,6 @@
+*.DS_Store
+/Individual-Contest/Concepts/out
+/Individual-Contest/Concepts/unsloth_compiled_cache/
+/Individual-Contest/Concepts/unsloth_training_checkpoints/
+venv
+__pycache__
