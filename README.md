@@ -84,6 +84,24 @@ Translated versions of the Individual Contest task statements are available for 
 
 These translations were optionally prepared by Team Leaders and provided to their contestants during the contest, alongside the official English version.
 
+## Task Authors & Contributors
+
+### Individual Contest
+- **Task 1 – Radar**: Team from **Peking University**  
+- **Task 2 – Satellite Weather Forecasting & Chicken Counting**: **Evgenii Tsymbalov (At-Home)** & Team from **Shenzhen University (On-Site)**  
+- **Task 3 – Concepts**: **Alham Aji**  
+- **Task 4 – Restroom Icon Matching**: Team from **Beihang University**  
+- **Task 5 – Antique Painting Authentication**: **Dong Yixi**, DP Technology  
+- **Task 6 – Pixel Efficiency Challenge**: **Kirill Fedyanin**  
+
+### GAITE Contest
+- **Task 3 – Resonance Elf**: **Ma Chichuan**, Beijing Navigation School  
+- **Task 4 – Combinatorial Word Segmentation**: **Li Yulin**, Microsoft  
+- **Task 5 – Synthetic Speech Detector**: **Li Yulin**, Microsoft  
+
+### Team Challenge
+- **Factory of the Future**: Team from **Galbot** and **Beijing National Day School**  
+
 ## License
 
 This work is released under the **Creative Commons Attribution 4.0 International (CC-BY-4.0)** License.  
